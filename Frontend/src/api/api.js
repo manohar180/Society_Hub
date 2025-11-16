@@ -4,7 +4,7 @@ import axios from 'axios';
 const getBaseURL = () => {
     // In production (Vercel), use the production backend URL
     if (process.env.NODE_ENV === 'production') {
-        return process.env.REACT_APP_API_URL || 'https://society-hub.onrender.com';
+        return process.env.REACT_APP_API_URL || 'https://society-hub.onrender.com/api';
     }
     // In development, use localhost
     return process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
