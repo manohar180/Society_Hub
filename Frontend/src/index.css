@@ -1,0 +1,694 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* --- BRAND COLORS --- */
+  --primary: #6366f1;       /* Indigo */
+  --primary-hover: #4f46e5;
+  --secondary: #10b981;     /* Emerald */
+  --danger: #ef4444;        /* Red */
+  --warning: #f59e0b;       /* Amber */
+  
+  /* --- LIGHT MODE VARIABLES --- */
+  --bg-main: #f1f5f9;       /* Light Gray Background */
+  --bg-card: #ffffff;       /* White Cards */
+  --bg-input: #f8fafc;
+  --text-main: #0f172a;     /* Dark Slate Text */
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* --- DARK MODE VARIABLES --- */
+[data-bs-theme='dark'] {
+  --bg-main: #0f172a;       /* Deep Blue/Slate Background */
+  --bg-card: #1e293b;       /* Lighter Slate Cards */
+  --bg-input: #334155;      /* Dark Inputs */
+  --text-main: #f8fafc;     /* White Text */
+  --text-muted: #94a3b8;    /* Light Gray Text */
+  --border-color: #334155;  /* Subtle Border */
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3); /* Darker Shadow */
+  --shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* --- UNIVERSAL COMPONENT STYLES --- */
+
+/* Cards */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  color: var(--text-main);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card-header {
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Inputs & Forms */
+.form-control, .form-select {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: var(--bg-input);
+  color: var(--text-main);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Buttons */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.2s;
+}
+.btn-primary { background-color: var(--primary); border: none; }
+.btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+
+/* List Groups */
+.list-group-item {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--bg-card) !important;
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0;
+}
+.navbar-brand {
+  color: var(--primary) !important;
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+.nav-link {
+  color: var(--text-muted) !important;
+  font-weight: 500;
+}
+.nav-link.active {
+  color: var(--primary) !important;
+}
+
+/* Text Utilities Override */
+.text-muted { color: var(--text-muted) !important; }
+.text-dark { color: var(--text-main) !important; } /* Forces text to adapt */
+.bg-light { background-color: var(--bg-input) !important; } /* Adapts light bg */
+.bg-white { background-color: var(--bg-card) !important; } /* Adapts white bg */
+
+/* Resident selection cards (used in Admin -> CreateInvoice bulk selection)
+   These adapt to light/dark themes using CSS variables defined above. */
+.resident-selection-container {
+  max-height: 200px;
+  overflow-y: auto;
+  /* Ensure container uses theme-aware card background */
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem;
+}
+
+.resident-card {
+  border-radius: 10px;
+  padding: 0.6rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+}
+
+.resident-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.resident-card.selected {
+  background: linear-gradient(90deg, rgba(99,102,241,0.06), rgba(16,185,129,0.02));
+  border-color: var(--primary);
+  color: var(--text-main);
+}
+
+.resident-card.unselected {
+  background-color: transparent;
+  color: var(--text-muted);
+  opacity: 0.95;
+}
+
+.resident-card small { font-size: 0.85rem; }
+
+.resident-badge-yes { background-color: var(--secondary); color: #fff; }
+.resident-badge-no { background-color: #6b7280; color: #fff; }
+
+/* Override Bootstrap 'bg-secondary' badge to be theme-aware */
+.badge.bg-secondary {
+  background-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+/* Accent styles for Resident dashboard cards */
+.accent-visitor {
+  border-left: 6px solid var(--secondary);
+}
+.accent-invoice {
+  border-left: 6px solid var(--danger);
+}
+
+/* Slight header gradient that adapts to theme */
+.card-header.accent-header {
+  background: linear-gradient(90deg, rgba(99,102,241,0.04), rgba(16,185,129,0.02));
+}
+
+/* Complaint image container - theme aware */
+.complaint-image-container {
+  width: 100%;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-input);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.complaint-image-container img {
+  max-height: 400px;
+  width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Buttons - Updated for mobile touch-friendly sizing */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.2s;
+  min-height: 44px;  /* Touch-friendly size for mobile */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+.btn-primary { background-color: var(--primary); border: none; }
+.btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+
+/* Mobile-first button sizes */
+@media (max-width: 576px) {
+  .btn {
+    padding: 0.65rem 1rem;
+    min-height: 48px;
+    width: 100%;
+    font-size: 1rem;
+  }
+  
+  .btn-sm {
+    min-height: 40px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Ensure containers are properly padded on mobile */
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* ---------- Desktop / Large-screen adjustments ---------- */
+/* Centered content wrapper with sensible max widths for large screens */
+.content-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1200px; /* comfortable reading width on desktops */
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 1000px;
+  }
+
+  /* Make resident selection show as responsive grid on wider screens */
+  .resident-selection-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.6rem;
+    max-height: 360px; /* slightly larger on desktop */
+    overflow-y: auto;
+    padding: 0.75rem;
+  }
+
+  .resident-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 72px;
+  }
+}
+
+/* Ensure images scale correctly without distortion across devices */
+.complaint-image-container img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Utility grid for two-column layouts on desktop that stack on mobile */
+.two-col {
+  display: block;
+}
+@media (min-width: 992px) {
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 1rem;
+    align-items: start;
+  }
+}
+
+/* Make cards and content breathe more on desktop */
+@media (min-width: 1200px) {
+  .card {
+    border-radius: 18px;
+    padding: 1rem;
+  }
+}
+
+/* Improve navbar contrast & spacing on large screens */
+.navbar {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+/* Helpful small adjustments for form layouts */
+.form-row {
+  display: block;
+}
+@media (min-width: 768px) {
+  .form-row.row-cols-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* Ensure interactive elements have large enough hit areas on desktop too */
+.clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Minor accessibility: focus outlines that respect theme */
+:focus {
+  outline: 3px solid rgba(99,102,241,0.18);
+  outline-offset: 2px;
+}
+
+/* Resident Dashboard Styles */
+.resident-dashboard-container {
+  background: var(--bg-main);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.dashboard-header {
+  background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(16,185,129,0.04) 100%);
+  padding: 2rem 0;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.dashboard-header p {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.dashboard-title {
+  color: var(--text-main) !important;
+  font-weight: 700 !important;
+}
+
+.dashboard-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard-card .card-header {
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.5rem;
+  color: var(--text-main);
+}
+
+.dashboard-card .card-header h5 {
+  color: var(--text-main) !important;
+  font-weight: 700;
+}
+
+.dashboard-card .card-header small {
+  color: var(--text-muted) !important;
+}
+
+.dashboard-card .card-body {
+  color: var(--text-main);
+}
+
+.dashboard-card .card-body h6 {
+  color: var(--text-main) !important;
+}
+
+.dashboard-card .card-body .text-muted {
+  color: var(--text-muted) !important;
+}
+
+.dashboard-card .card-body .text-success {
+  color: var(--secondary) !important;
+}
+
+.dashboard-card .card-body .text-danger {
+  color: var(--danger) !important;
+}
+
+.dashboard-card .card-body .text-warning {
+  color: var(--warning) !important;
+}
+
+.bg-gradient-visitor {
+  background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(99,102,241,0.05) 100%) !important;
+}
+
+.bg-gradient-invoice {
+  background: linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(99,102,241,0.05) 100%) !important;
+}
+
+.bg-danger-light {
+  background: linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(99,102,241,0.05) 100%) !important;
+}
+
+.bg-success-light {
+  background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(34,197,94,0.05) 100%) !important;
+}
+
+.icon-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.alert-visitor-request {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-left: 5px solid var(--warning);
+}
+
+/* Force visitor alert text to dark color so all labels/readouts are clearly visible */
+.alert-visitor-request h5,
+.alert-visitor-request h6,
+.alert-visitor-request p,
+.alert-visitor-request .text-muted,
+.alert-visitor-request small,
+.alert-visitor-request .badge {
+  color: #0f172a !important;
+}
+
+/* Dark-mode adjustments for visitor request card to avoid a bright white block
+   inside a dark dashboard (improves contrast for buttons and text) */
+[data-bs-theme='dark'] .alert-visitor-request {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-left: 5px solid rgba(245,158,11,0.9); /* stronger amber on dark */
+  box-shadow: none;
+}
+
+/* Make inner list items and buttons inside the visitor alert match dark theme */
+[data-bs-theme='dark'] .alert-visitor-request .list-group-item,
+[data-bs-theme='dark'] .alert-visitor-request .card,
+[data-bs-theme='dark'] .alert-visitor-request .card-body {
+  background-color: transparent;
+  color: var(--text-main);
+  border-color: rgba(255,255,255,0.04);
+}
+
+[data-bs-theme='dark'] .alert-visitor-request .btn {
+  color: #fff;
+}
+
+[data-bs-theme='dark'] .visitor-requests-list .badge {
+  background-color: rgba(255,255,255,0.06) !important;
+  color: var(--text-main) !important;
+}
+
+/* Stronger overrides to ensure nested card elements don't stay white in dark mode.
+   Some components or Bootstrap utility classes (e.g., .bg-white, .bg-light, .card)
+   may force a light background — override them here for visitor requests. */
+
+/* Force visitor inner entries to match page background (helps both light & dark)
+   Use var(--bg-main) so the boxed entry blends with surrounding page. */
+.alert-visitor-request .bg-white,
+.alert-visitor-request .bg-white *,
+.alert-visitor-request .bg-light,
+.alert-visitor-request .bg-light * {
+  background-color: var(--bg-main) !important;
+  color: var(--text-main) !important;
+}
+
+/* If the entry has both bg-white and border classes, make the border subtle */
+.alert-visitor-request .bg-white.border,
+.alert-visitor-request .bg-light.border {
+  background-color: var(--bg-main) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+
+/* Ensure rounded inner entry containers also blend */
+.alert-visitor-request .rounded,
+.alert-visitor-request .rounded * {
+  background-color: transparent !important;
+}
+
+/* If the card uses inline badges or small labels, ensure legibility */
+[data-bs-theme='dark'] .alert-visitor-request .small,
+[data-bs-theme='dark'] .alert-visitor-request small {
+  color: var(--text-muted) !important;
+}
+
+/* Give Allow/Deny buttons clearer contrast inside the dark visitor card */
+[data-bs-theme='dark'] .alert-visitor-request .btn.btn-success {
+  background-color: #2f9a67 !important;
+  border-color: #2f9a67 !important;
+}
+[data-bs-theme='dark'] .alert-visitor-request .btn.btn-danger {
+  background-color: #c24141 !important;
+  border-color: #c24141 !important;
+}
+
+.visitor-requests-list {
+  animation: slideInDown 0.5s ease;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-card .list-group-item {
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+.dashboard-card .list-group-item h6 {
+  color: var(--text-main) !important;
+  font-weight: 600;
+}
+
+.dashboard-card .list-group-item small {
+  color: var(--text-muted) !important;
+}
+
+.dashboard-card .list-group-item:last-child {
+  border-bottom: none;
+}
+
+.dashboard-card .badge {
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+}
+
+.bg-primary-subtle {
+  background-color: rgba(99,102,241,0.1) !important;
+  color: var(--primary) !important;
+}
+
+/* Mobile adjustments for dashboard */
+@media (max-width: 992px) {
+  .dashboard-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .dashboard-header {
+    padding: 1.5rem 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .dashboard-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .resident-dashboard-container {
+    padding: 1rem 0;
+  }
+  
+  .icon-circle {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
+
+/* ---------- Auth Card (Login / Signup) contrast fixes ---------- */
+.auth-card {
+  /* keep the frosted white look but ensure internal controls contrast */
+  color: #0f172a !important;
+  background-color: rgba(255,255,255,0.95) !important;
+}
+
+/* Make muted subtitle readable on the light auth-card */
+.auth-card p.text-muted {
+  color: #000000 !important; /* black for clear visibility */
+}
+
+/* Links inside auth-card should be more visible */
+.auth-card a {
+  color: #6366f1 !important;
+  font-weight: 600;
+}
+
+/* Make input fields light and readable — override global form-control defaults */
+.auth-card .input-group {
+  background-color: transparent !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.auth-card .form-control {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.auth-card .form-control:focus {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+}
+
+.auth-card .form-control::placeholder {
+  color: #6b7280 !important;
+  opacity: 1;
+}
+
+.auth-card .input-group-text {
+  background-color: #f3f4f6 !important;
+  border: none !important;
+  color: #6366f1 !important;
+  padding: 0.5rem 1rem;
+}
+
+/* For dark theme: softer inputs that still have good contrast */
+[data-bs-theme='dark'] .auth-card {
+  background-color: rgba(30,41,59,0.95) !important;
+  color: #f8fafc !important;
+}
+[data-bs-theme='dark'] .auth-card p.text-muted {
+  color: #cbd5e1 !important;
+}
+[data-bs-theme='dark'] .auth-card .form-control {
+  background-color: rgba(15,23,42,0.3) !important;
+  color: #f8fafc !important;
+  border: 1px solid #475569 !important;
+}
+[data-bs-theme='dark'] .auth-card .form-control:focus {
+  background-color: rgba(15,23,42,0.5) !important;
+  border-color: #6366f1 !important;
+}
+[data-bs-theme='dark'] .auth-card .form-control::placeholder {
+  color: #94a3b8 !important;
+}
+[data-bs-theme='dark'] .auth-card .input-group-text {
+  background-color: transparent !important;
+  color: #6366f1 !important;
+}
+
